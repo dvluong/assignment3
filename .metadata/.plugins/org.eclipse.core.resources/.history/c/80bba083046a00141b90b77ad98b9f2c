@@ -1,0 +1,290 @@
+package edu.csupomona.cs.cs356.assignment_2;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+
+import javax.imageio.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTree;
+import javax.swing.UIManager;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.border.EmptyBorder;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
+
+import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import java.awt.SystemColor;
+
+public class AdminCP {
+
+	private JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) throws IOException {
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					AdminCP window = new AdminCP();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public AdminCP() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	@SuppressWarnings("serial")
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(204, 102, 204));
+		frame.setBackground(Color.CYAN);
+		frame.setBounds(100, 100, 657, 431);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
+		JButton btnUserID = new JButton("User Id") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnUserID.setForeground(new Color(0, 0, 0));
+		btnUserID.setContentAreaFilled(false);
+		btnUserID.setBackground(new Color(213, 134, 145, 123));
+		btnUserID.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnUserID.setBounds(293, 11, 166, 39);
+		frame.getContentPane().add(btnUserID);
+		UIManager.put("Tree.rendererFillBackground", false);
+		JTree tree = new JTree(){
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		tree.setForeground(new Color(0, 204, 255));
+		tree.setIgnoreRepaint(false);;
+		tree.setBackground(new Color(213, 134, 145, 123));
+		tree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("JTree") {
+			{
+				DefaultMutableTreeNode node_1;
+				node_1 = new DefaultMutableTreeNode("colors");
+				node_1.add(new DefaultMutableTreeNode("blue"));
+				node_1.add(new DefaultMutableTreeNode("violet"));
+				node_1.add(new DefaultMutableTreeNode("red"));
+				node_1.add(new DefaultMutableTreeNode("yellow"));
+				add(node_1);
+				node_1 = new DefaultMutableTreeNode("sports");
+				node_1.add(new DefaultMutableTreeNode("basketball"));
+				node_1.add(new DefaultMutableTreeNode("soccer"));
+				node_1.add(new DefaultMutableTreeNode("football"));
+				node_1.add(new DefaultMutableTreeNode("hockey"));
+				add(node_1);
+				node_1 = new DefaultMutableTreeNode("food");
+				node_1.add(new DefaultMutableTreeNode("hot dogs"));
+				node_1.add(new DefaultMutableTreeNode("pizza"));
+				node_1.add(new DefaultMutableTreeNode("ravioli"));
+				node_1.add(new DefaultMutableTreeNode("bananas"));
+				add(node_1);
+			}
+		}));
+		tree.setBounds(21, 0, 262, 391);
+		frame.getContentPane().add(tree);
+
+		JButton btnGroupID = new JButton("Group Id") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnGroupID.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnGroupID.setForeground(Color.BLACK);
+		btnGroupID.setContentAreaFilled(false);
+		btnGroupID.setBackground(new Color(213, 134, 145, 123));
+		btnGroupID.setBounds(293, 50, 166, 39);
+		frame.getContentPane().add(btnGroupID);
+
+		JButton btnAddGroup = new JButton("Add Group"){
+			@Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque() && getBackground().getAlpha() < 255) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+                super.paintComponent(g);
+            }
+		};
+		btnAddGroup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnAddGroup.setForeground(Color.BLACK);
+		btnAddGroup.setContentAreaFilled(false);
+		btnAddGroup.setBackground(new Color(213, 134, 145, 123));
+		btnAddGroup.setBounds(469, 50, 166, 39);
+		frame.getContentPane().add(btnAddGroup);
+
+		JButton btnAddUser = new JButton("Add User"){
+			@Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque() && getBackground().getAlpha() < 255) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+                super.paintComponent(g);
+            }
+		};
+		btnAddUser.setForeground(Color.BLACK);
+		btnAddUser.setContentAreaFilled(false);
+		btnAddUser.setBackground(new Color(213, 134, 145, 123));
+		btnAddUser.setBounds(469, 11, 166, 39);
+		frame.getContentPane().add(btnAddUser);
+
+		JButton btnOpenUserView = new JButton("Open User View"){
+			@Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque() && getBackground().getAlpha() < 255) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+                super.paintComponent(g);
+            }
+		};
+		btnOpenUserView.setForeground(Color.BLACK);
+		btnOpenUserView.setContentAreaFilled(false);
+		btnOpenUserView.setBackground(new Color(213, 134, 145, 123));
+		btnOpenUserView.setBounds(293, 95, 342, 39);
+		frame.getContentPane().add(btnOpenUserView);
+
+		JButton btnUserTotal = new JButton("Show User Total"){
+			@Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque() && getBackground().getAlpha() < 255) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+                super.paintComponent(g);
+            }
+		};
+		btnUserTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnUserTotal.setForeground(Color.BLACK);
+		btnUserTotal.setContentAreaFilled(false);
+		btnUserTotal.setBackground(new Color(213, 134, 145, 123));
+		btnUserTotal.setBounds(293, 302, 166, 39);
+		frame.getContentPane().add(btnUserTotal);
+
+		JButton btnTotalMsgs = new JButton("Show Messages Total"){
+			@Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque() && getBackground().getAlpha() < 255) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+                super.paintComponent(g);
+            }
+		};
+		btnTotalMsgs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnTotalMsgs.setForeground(Color.BLACK);
+		btnTotalMsgs.setContentAreaFilled(false);
+		btnTotalMsgs.setBackground(new Color(213, 134, 145, 123));
+		btnTotalMsgs.setBounds(293, 342, 166, 39);
+		frame.getContentPane().add(btnTotalMsgs);
+
+		JButton btnGroupTotal = new JButton("Show Group Total"){
+			@Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque() && getBackground().getAlpha() < 255) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+                super.paintComponent(g);
+            }
+		};
+		btnGroupTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnGroupTotal.setForeground(Color.BLACK);
+		btnGroupTotal.setContentAreaFilled(false);
+		btnGroupTotal.setBackground(new Color(213, 134, 145, 123));
+		btnGroupTotal.setBounds(463, 302, 172, 39);
+		frame.getContentPane().add(btnGroupTotal);
+
+		JButton btnButtonShow_1 = new JButton("Show Positive Percentage"){
+			@Override
+            protected void paintComponent(Graphics g) {
+                if (!isOpaque() && getBackground().getAlpha() < 255) {
+                    g.setColor(getBackground());
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+                super.paintComponent(g);
+            }
+		};
+		btnButtonShow_1.setForeground(Color.BLACK);
+		btnButtonShow_1.setContentAreaFilled(false);
+		btnButtonShow_1.setBackground(new Color(213, 134, 145, 123));
+		btnButtonShow_1.setBounds(463, 342, 172, 39);
+		frame.getContentPane().add(btnButtonShow_1);
+
+		JLabel label_1 = new JLabel("");
+		label_1.setBounds(125, 184, 200, 50);
+		frame.getContentPane().add(label_1);
+
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(AdminCP.class
+				.getResource("/image/jibril2.jpg")));
+		label.setBounds(20, 0, 602, 405);
+		frame.getContentPane().add(label);
+	}
+}

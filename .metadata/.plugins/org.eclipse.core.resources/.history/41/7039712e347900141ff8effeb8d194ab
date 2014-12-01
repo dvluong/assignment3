@@ -1,0 +1,10 @@
+package edu.csupomona.cs.cs356.assignment_2;
+
+import edu.csupomona.cs.cs356.assignment_2.GroupComposite;
+import edu.csupomona.cs.cs356.assignment_2.User;
+
+public interface Visitor {
+	public void visitUser(User user);
+	public void visitGroup(GroupComposite group);
+
+}

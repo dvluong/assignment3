@@ -1,0 +1,399 @@
+package edu.csupomona.cs.cs356.assignment_2;
+/**
+ * CS 356: Objected Oriented Programming 
+ * Professor: Yu Sun
+ *
+ * Project 2
+ *
+ * <The main menu for the Admin. Allows the Admin to add
+ * new users to the JTree and opens the user view for the
+ * selected user in the JTree. Implements Singleton Pattern.>
+ *
+ * David V Luong
+ */
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTree;
+import javax.swing.UIManager;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import java.awt.Color;
+
+import javax.swing.JTextArea;
+
+import java.awt.Toolkit;
+import java.awt.SystemColor;
+import java.util.HashMap;
+import java.util.Map;
+
+
+@SuppressWarnings("serial")
+public class AdminCP extends DefaultTreeCellRenderer{
+
+	private JFrame frame;
+	private String storeGroup;
+	private String storeUser;
+	private JButton btnAddGroup;
+	private static final AdminCP instance = new AdminCP();
+	protected GroupComposite rootGroup;
+	protected User user;
+	protected UserManager UM = new UserManager(); 
+	protected DefaultMutableTreeNode selectNode;
+	private UI ui;
+	private Map<String, GroupComposite> groups = new HashMap<String, GroupComposite>();
+	/**
+	 * Create the application.
+	 */
+	public AdminCP() {
+
+	}
+	public static AdminCP getInstance(){
+		return instance;
+	}
+	public UserManager getManager(){
+		return UM;
+	}
+	
+	protected void run(){
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					AdminCP window = new AdminCP();
+					window.initialize();
+					window.frame.setVisible(true);					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame("AdminControlPanel");
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(
+				AdminCP.class.getResource("/image/naruto.jpg")));
+		frame.getContentPane().setBackground(new Color(204, 102, 204));
+		frame.setBackground(Color.CYAN);
+		frame.setBounds(100, 100, 975, 599);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		UIManager.put("Tree.rendererFillBackground", false);
+
+		JTextArea textAddGroup = new JTextArea();
+		textAddGroup.setBackground(Color.LIGHT_GRAY);
+		textAddGroup.setBounds(750, 58, 132, 22);
+		frame.getContentPane().add(textAddGroup);
+
+		btnAddGroup = new JButton("Add Group") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+
+		btnAddGroup.setForeground(Color.BLACK);
+		btnAddGroup.setContentAreaFilled(false);
+		btnAddGroup.setBackground(new Color(200, 100, 200, 200));
+		btnAddGroup.setBounds(584, 50, 156, 39);
+		frame.getContentPane().add(btnAddGroup);
+
+		JTextArea textAddUser = new JTextArea();
+		textAddUser.setBackground(Color.LIGHT_GRAY);
+		textAddUser.setBounds(750, 22, 132, 22);
+		frame.getContentPane().add(textAddUser);
+
+		JButton btnAddUser = new JButton("Add User") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnAddUser.setForeground(Color.BLACK);
+		btnAddUser.setContentAreaFilled(false);
+		btnAddUser.setBackground(new Color(200, 100, 200, 200));
+		btnAddUser.setBounds(584, 11, 156, 39);
+		frame.getContentPane().add(btnAddUser);
+		rootGroup = new GroupComposite("Root");
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootGroup);
+		DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+		JTree tree = new JTree(treeModel) {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		
+		
+		groups.put(rootNode.getUserObject().toString(), rootGroup);
+		tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            private Icon closedIcon = UIManager.getIcon("Tree.closedIcon");
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value,
+                boolean sel, boolean exp, boolean leaf, int row, boolean hasFocus) {
+                DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) value;
+                String s = rootNode.getUserObject().toString();
+                Component c = super.getTreeCellRendererComponent(
+                    tree, value, sel, exp, leaf, row, hasFocus);                
+                if ("Root".equals(s))              
+                    setIcon(closedIcon);                       
+                return c;
+            }
+        });
+		
+
+		tree.setRootVisible(true);
+		tree.setForeground(SystemColor.activeCaptionText);
+		tree.setOpaque(false);
+		tree.setBackground(new Color(200, 100, 200, 200));
+		tree.setModel(treeModel); {
+			{
+				btnAddGroup.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+						DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+						DefaultMutableTreeNode newNode = new DefaultMutableTreeNode (new GroupComposite(textAddGroup.getText()));						
+						if (selectedNode != null) {
+							if (e.getSource() == btnAddGroup && !textAddGroup.getText().trim().equals("")) {
+								storeGroup = textAddGroup.getText();	
+								if (!groups.containsKey(storeGroup) && selectedNode.getUserObject() instanceof GroupComposite){
+									rootGroup.add(new GroupComposite(storeGroup));
+									groups.put(storeGroup, new GroupComposite(storeGroup));
+								} else {
+									JOptionPane.showMessageDialog(null, "This group already exists.");
+									return;
+								}
+								tree.setCellRenderer(new DefaultTreeCellRenderer() {
+						            private Icon closedIcon = UIManager.getIcon("Tree.closedIcon");						            
+						            @Override
+						            public Component getTreeCellRendererComponent(JTree tree, Object value,
+						                    boolean sel, boolean exp, boolean leaf, int row, boolean hasFocus) {
+						                    DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) value;
+						                    String s = rootNode.getUserObject().toString();
+						                    Component c = super.getTreeCellRendererComponent(
+						                        tree, value, sel, exp, leaf, row, hasFocus);                
+						                    if (storeGroup.equals(s))              
+						                        setIcon(closedIcon);                       
+						                    return c;
+						                }
+						        });
+								model.insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
+								model.reload();
+								
+								JOptionPane.showMessageDialog(null, "Added Group: " + storeGroup);
+							} else {
+								JOptionPane.showMessageDialog(null, "Please enter a Group Name.");
+							} 
+						} else {
+							JOptionPane.showMessageDialog(null, "Please select a folder to add to.");
+						}
+					}
+
+				});
+				btnAddUser.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+						DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+						DefaultMutableTreeNode newNode = new DefaultMutableTreeNode (textAddUser.getText());
+						
+						if (selectedNode != null) {
+							if (e.getSource() == btnAddUser && !textAddUser.getText().trim().equals("")) {
+								storeUser = textAddUser.getText();
+								if (!UM.userManager.containsKey(storeUser) && selectedNode.getUserObject() instanceof GroupComposite){
+									rootGroup.add(new User(storeUser));	
+									UM.add(storeUser, new User(storeUser));
+								} else if (UM.userManager.containsKey(storeUser)) {
+									JOptionPane.showMessageDialog(null, "This is a user exists, please choose a different name.");
+									return;
+								} else {
+									JOptionPane.showMessageDialog(null, "This is a user, please select a group to add to.");
+									return;
+								}
+								tree.setCellRenderer(new DefaultTreeCellRenderer() {
+						            private Icon leafIcon = UIManager.getIcon("Tree.leafIcon");								        
+						            @Override
+						            public Component getTreeCellRendererComponent(JTree tree, Object value,
+						                    boolean sel, boolean exp, boolean leaf, int row, boolean hasFocus) {
+						                    DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) value;
+						                    String s = rootNode.getUserObject().toString();
+						                    Component c = super.getTreeCellRendererComponent(
+						                        tree, value, sel, exp, leaf, row, hasFocus);                
+						                    if (storeUser.equals(s)){              
+						                        setIcon(leafIcon);   
+						                    }
+						                    return c;
+						                }
+						        });								
+								model.insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
+								model.reload();
+								JOptionPane.showMessageDialog(null, "Added User: " + storeUser);
+							} else {
+								JOptionPane.showMessageDialog(null, "Please enter a User Name.");
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "Please select a folder to add to.");
+						}
+					}
+				});
+				
+			}
+
+		};
+		tree.setBounds(9, 9, 251, 532);
+		frame.getContentPane().add(tree);
+		JButton btnOpenUserView = new JButton("Open User View") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnOpenUserView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();									
+				if (selectNode != null && !(selectNode.getUserObject() instanceof GroupComposite)){				    	
+				    System.out.println(UM.getID(selectNode.getUserObject().toString()));
+				    ui = new UI(UM, user, selectNode);
+				    UM.addUI(selectNode.getUserObject().toString(), ui);
+				    ui.run(ui);
+				    return;
+				} else {
+				    JOptionPane.showMessageDialog(null, "Please select a user.");
+				    return;
+				}
+			}		 
+
+		});
+		
+		btnOpenUserView.setForeground(Color.BLACK);
+		btnOpenUserView.setContentAreaFilled(false);
+		btnOpenUserView.setBackground(new Color(200, 100, 200, 200));
+		btnOpenUserView.setBounds(271, 95, 313, 39);
+		frame.getContentPane().add(btnOpenUserView);
+
+		JButton btnUserTotal = new JButton("User Total") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnUserTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VisitUser visiting= new VisitUser();
+				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
+				JOptionPane.showMessageDialog(null, "User total = " + visiting.getCounter());
+			}
+		});
+		btnUserTotal.setForeground(Color.BLACK);
+		btnUserTotal.setContentAreaFilled(false);
+		btnUserTotal.setBackground(new Color(200, 100, 200, 200));
+		btnUserTotal.setBounds(270, 302, 156, 39);
+		frame.getContentPane().add(btnUserTotal);
+
+		JButton btnGroupTotal = new JButton("Group Total") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnGroupTotal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VisitGroups visiting = new VisitGroups();
+				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
+				JOptionPane.showMessageDialog(null, "Group total = " + visiting.getCounter());
+			}
+		});
+		btnGroupTotal.setForeground(Color.BLACK);
+		btnGroupTotal.setContentAreaFilled(false);
+		btnGroupTotal.setBackground(new Color(200, 100, 200, 200));
+		btnGroupTotal.setBounds(428, 302, 156, 39);
+		frame.getContentPane().add(btnGroupTotal);
+		JButton btnTotalMsgs = new JButton("Total Messages") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnTotalMsgs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {	
+				VisitMessages visiting = new VisitMessages();
+				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
+				JOptionPane.showMessageDialog(null, "Total messages = " + visiting.getCounter());
+			}
+		});
+		btnTotalMsgs.setForeground(Color.BLACK);
+		btnTotalMsgs.setContentAreaFilled(false);
+		btnTotalMsgs.setBackground(new Color(200, 100, 200, 200));
+		btnTotalMsgs.setBounds(270, 342, 156, 39);
+		frame.getContentPane().add(btnTotalMsgs);
+
+		JButton btnPositivePercentage = new JButton("Positive \rPercentage") {
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		btnPositivePercentage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VisitPositivePercent visiting = new VisitPositivePercent();
+				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
+				JOptionPane.showMessageDialog(null, "Total messages = %" + visiting.positivePercent());
+			}
+		});
+		btnPositivePercentage.setForeground(Color.BLACK);
+		btnPositivePercentage.setContentAreaFilled(false);
+		btnPositivePercentage.setBackground(new Color(200, 100, 200, 200));
+		btnPositivePercentage.setBounds(428, 342, 156, 39);
+		frame.getContentPane().add(btnPositivePercentage);
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(AdminCP.class.getResource("/image/jibril3.jpg")));
+		label.setBounds(0, -31, 965, 632);
+		frame.getContentPane().add(label);
+	}
+}

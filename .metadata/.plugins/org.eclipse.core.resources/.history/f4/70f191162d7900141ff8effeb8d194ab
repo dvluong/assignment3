@@ -1,0 +1,10 @@
+package edu.csupomona.cs.cs356.assignment_2;
+
+import java.util.List;
+
+public interface Visitor {
+	public int visitUser();
+	public int visitGroup();
+	public int visitTweets(List<String> tweets);
+	public double visitPositive(List<String> tweets);
+}

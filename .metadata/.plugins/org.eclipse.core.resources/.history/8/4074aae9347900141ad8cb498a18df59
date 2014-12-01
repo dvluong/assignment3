@@ -1,0 +1,19 @@
+package edu.csupomona.cs.cs356.visitors;
+<<<<<<< HEAD
+
+=======
+/**
+ * CS 356: Objected Oriented Programming 
+ * Professor: Yu Sun
+ *
+ * Project 2
+ *
+ * <Visitor pattern.>
+ *
+ * David V Luong
+ */
+>>>>>>> f88a6f0a2726214d34280980529ae2b3028d2f40
+public interface Visitor {
+	public int visitUser();
+	public int visitGroup();
+}
