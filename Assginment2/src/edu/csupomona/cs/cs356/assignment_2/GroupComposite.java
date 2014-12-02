@@ -18,18 +18,8 @@ import java.util.List;
 import edu.csupomona.cs.cs356.visitors.Visitor;
 
 public class GroupComposite implements TwitterComponent {
-	List<TwitterComponent> list = new ArrayList<TwitterComponent>();
-
-	String group;
-	private static final GroupComposite instance = new GroupComposite();
-
-	public GroupComposite() {
-
-	}
-
-	public static GroupComposite getInstance() {
-		return instance;
-	}
+	protected List<TwitterComponent> list = new ArrayList<TwitterComponent>();
+	protected String group;
 
 	public GroupComposite(String newGroup) {
 		group = newGroup;

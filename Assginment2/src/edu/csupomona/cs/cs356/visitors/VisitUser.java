@@ -5,6 +5,7 @@ import edu.csupomona.cs.cs356.assignment_2.User;
 
 
 
+
 public class VisitUser implements Visitor{
 
 	private int count = 0;
@@ -29,5 +30,7 @@ public class VisitUser implements Visitor{
 	public void visitGroup(GroupComposite group) {
 		return;		
 	}
+
+
 	
 }

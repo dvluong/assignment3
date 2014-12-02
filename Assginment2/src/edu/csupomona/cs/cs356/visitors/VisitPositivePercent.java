@@ -33,8 +33,8 @@ public class VisitPositivePercent implements Visitor{
 	}
 	@Override
 	public void visitUser(User user) {
-		for (Object tweet: user.tweet){
-			if (tweet.toString().toLowerCase().contains("good") || tweet.toString().toLowerCase().contains("great") || tweet.toString().toLowerCase().contains("awesome")){
+		for (String tweet: user.tweet){
+			if (tweet.toString().contains("good") || tweet.toString().contains("great") || tweet.toString().contains("awesome")){
 				setCount(getCount() + 1);
 			}
 			setTotal(getTotal() + 1);
@@ -46,5 +46,6 @@ public class VisitPositivePercent implements Visitor{
 	public void visitGroup(GroupComposite group) {
 		return;
 	}
+
 
 }

@@ -1,0 +1,37 @@
+package edu.csupomona.cs.cs356.visitors;
+
+import edu.csupomona.cs.cs356.assignment_2.GroupComposite;
+import edu.csupomona.cs.cs356.assignment_2.User;
+
+public class VisitLastUpdateUser implements Visitor {
+
+	String userId = null;
+	long updatedTime = 0;
+	
+	private void setUpdateTime(long time) {
+		this.updatedTime = time;
+	}
+	private void setID(String userId) {
+		this.userId = userId;
+	}
+	
+	public long getTime(){
+		return updatedTime;
+	}
+	
+	public String getID(){
+		return userId;
+	}
+	@Override
+	public void visitUser(User user) {
+		if (user.getLastUpdatedTime() > getTime()){
+			setUpdateTime(user.getLastUpdatedTime());
+			setID(user.getUser());
+		}
+	}
+
+	@Override
+	public void visitGroup(GroupComposite group) {
+		return;
+	}
+}

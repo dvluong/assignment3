@@ -52,5 +52,5 @@ public class UserManager {
 	public boolean getKeysArrayUI(String key){
 		return uiMap.keySet().contains(key);
 	}
-	
+
 }

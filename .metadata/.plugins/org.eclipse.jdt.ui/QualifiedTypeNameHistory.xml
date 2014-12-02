@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="edu.csupomona.cs.cs356.assignment_2.User"/>
 <fullyQualifiedTypeName name="edu.csupomona.cs.cs356.assignment_2.GroupComposite"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="edu.csupomona.cs.cs356.visitors.VisitValidUserGroup"/>
+<fullyQualifiedTypeName name="java.awt.Frame"/>
+<fullyQualifiedTypeName name="javax.swing.JList"/>
+<fullyQualifiedTypeName name="java.awt.Dimension"/>
+<fullyQualifiedTypeName name="java.awt.GridLayout"/>
+<fullyQualifiedTypeName name="java.util.Vector"/>
+<fullyQualifiedTypeName name="edu.csupomona.cs.cs356.visitors.VisitLastUpdateUser"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="edu.csupomona.cs.cs356.assignment_2.UserManager"/>
+<fullyQualifiedTypeName name="edu.csupomona.cs.cs356.assignment_2.User"/>
 </qualifiedTypeNameHistroy>

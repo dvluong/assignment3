@@ -1,0 +1,20 @@
+package edu.csupomona.cs.cs356.visitors;
+
+import edu.csupomona.cs.cs356.assignment_2.GroupComposite;
+import edu.csupomona.cs.cs356.assignment_2.User;
+
+public class VisitValidUsers implements Visitor {
+
+	@Override
+	public void visitUser(User user) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void visitGroup(GroupComposite group) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -150,7 +150,6 @@ public class UI{
 					temp = manager.getUser(selectNode.getUserObject().toString());
 				}
 				if(e.getSource() == btnTweet){
-
 					String tweet = textTweet.getText();					
 					Iterator<User> it = temp.followers.iterator();
 					boolean isPrinted = false;
@@ -158,6 +157,7 @@ public class UI{
 						User obj = it.next();						
 						if (temp.followers.contains(obj)){
 							temp.sendTweet(tweet);
+							temp.addTweet(tweet);
 							if(isPrinted == false){
 								newsFeed.addElement(temp.getUser() + " tweeted: " + temp.getTweet());					
 								isPrinted = true;

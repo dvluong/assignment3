@@ -30,27 +30,35 @@ import javax.swing.DefaultListModel;
 import edu.csupomona.cs.cs356.visitors.Visitor;
 public class User extends Observable implements TwitterComponent, Observer {
 
-	String user;
-	List<User> followers = new ArrayList<User>();
-	List<User> following = new ArrayList<User>();
+	protected String user;
+	protected List<User> followers = new ArrayList<User>();
+	protected List<User> following = new ArrayList<User>();
 	public List<String> tweet = new ArrayList<String>();
-	String tweets;
-
-
-
-	private static final User instance = new User();
-
-	public User() {
-
-	}
-
-	public static User getInstance() {
-		return instance;
-	}
+	protected String tweets;
+	private long creationTime;
+	private long lastUpdatedTime;
 
 	public User(String newUser) {
-		user = newUser;
+		setCreationTime(System.currentTimeMillis());
+		this.user = newUser;
 	}
+	
+	public void setCreationTime(long creationTime){
+		this.creationTime = creationTime;
+	}
+	
+	public void setLastUpdatedTime(long lastUpdatedTime){
+		this.lastUpdatedTime = lastUpdatedTime;
+	}
+	
+	public long getCreationTime(){
+		return creationTime;
+	}
+	
+	public long getLastUpdatedTime(){
+		return lastUpdatedTime;
+	}
+	
 
 	public String getUser() {
 		return user;
@@ -72,10 +80,11 @@ public class User extends Observable implements TwitterComponent, Observer {
 		notifyObservers(userToFollow);
 		clearChanged();
 	}
-
+	public void addTweet(String tweets){
+		tweet.add(tweets);
+	}
 	public void sendTweet(String tweets) {
 		this.tweets = tweets;
-		tweet.add(tweets);
 		setChanged();
 		notifyObservers(this.tweets);
 		clearChanged();
@@ -84,12 +93,16 @@ public class User extends Observable implements TwitterComponent, Observer {
 	public String getTweet(){
 		return tweets;
 	}
+	
+	
 
 	public void update(User user, String tweets, UserManager UM, User follower) {
 		DefaultListModel<String> listModel = new DefaultListModel<String>();	
 		if (UM.getKeysArrayUI(follower.getUser())){
+			setLastUpdatedTime(System.currentTimeMillis());
 			listModel = UM.getUI(follower.getUser()).newsFeed;
 			listModel.addElement(user.getUser() + " tweeted: " + tweets);
+			listModel.addElement("Last updated: " + getLastUpdatedTime());
 			UM.getUI(follower.getUser()).initialize(listModel);
 		}
 	}
@@ -112,7 +125,7 @@ public class User extends Observable implements TwitterComponent, Observer {
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitUser(this);
+		return;
 	}
 
 }

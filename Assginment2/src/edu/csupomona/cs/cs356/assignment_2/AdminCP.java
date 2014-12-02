@@ -12,13 +12,16 @@ package edu.csupomona.cs.cs356.assignment_2;
  * David V Luong
  */
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
@@ -30,9 +33,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.Color;
 import javax.swing.JTextArea;
 import edu.csupomona.cs.cs356.visitors.VisitGroups;
+import edu.csupomona.cs.cs356.visitors.VisitLastUpdateUser;
 import edu.csupomona.cs.cs356.visitors.VisitMessages;
 import edu.csupomona.cs.cs356.visitors.VisitPositivePercent;
 import edu.csupomona.cs.cs356.visitors.VisitUser;
+import edu.csupomona.cs.cs356.visitors.VisitValidUserGroup;
 import java.awt.Toolkit;
 import java.awt.SystemColor;
 import java.util.HashMap;
@@ -58,7 +63,7 @@ public class AdminCP extends DefaultTreeCellRenderer{
 	/**
 	 * Create the application.
 	 */
-	public AdminCP() {
+	private AdminCP() {
 
 	}
 	public static AdminCP getInstance(){
@@ -101,7 +106,7 @@ public class AdminCP extends DefaultTreeCellRenderer{
 		textAddGroup.setBackground(Color.LIGHT_GRAY);
 		textAddGroup.setBounds(750, 58, 132, 22);
 		frame.getContentPane().add(textAddGroup);
-
+		
 		btnAddGroup = new JButton("Add Group") {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -284,10 +289,11 @@ public class AdminCP extends DefaultTreeCellRenderer{
 		};
 		btnOpenUserView.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				VisitLastUpdateUser visiting = new VisitLastUpdateUser();
+				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
+				System.out.println("Time it was updated: " + visiting.getTime());
 				DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();									
 				if (selectNode != null && !(selectNode.getUserObject() instanceof GroupComposite)){				    	
-				    System.out.println(UM.getID(selectNode.getUserObject().toString()));
 				    ui = new UI(UM, user, selectNode);
 				    UM.addUI(selectNode.getUserObject().toString(), ui);
 				    ui.run(ui);
@@ -303,7 +309,7 @@ public class AdminCP extends DefaultTreeCellRenderer{
 		btnOpenUserView.setForeground(Color.BLACK);
 		btnOpenUserView.setContentAreaFilled(false);
 		btnOpenUserView.setBackground(new Color(200, 100, 200, 200));
-		btnOpenUserView.setBounds(271, 95, 313, 39);
+		btnOpenUserView.setBounds(271, 50, 251, 39);
 		frame.getContentPane().add(btnOpenUserView);
 
 		JButton btnUserTotal = new JButton("User Total") {
@@ -362,8 +368,8 @@ public class AdminCP extends DefaultTreeCellRenderer{
 				super.paintComponent(g);
 			}
 		};
+		
 		btnTotalMsgs.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent arg0) {	
 				VisitMessages visiting = new VisitMessages();
 				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
@@ -399,6 +405,64 @@ public class AdminCP extends DefaultTreeCellRenderer{
 		btnPositivePercentage.setBackground(new Color(200, 100, 200, 200));
 		btnPositivePercentage.setBounds(428, 342, 156, 39);
 		frame.getContentPane().add(btnPositivePercentage);
+		
+		JButton btnValidateUsers = new JButton("Validate Users"){
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		
+		btnValidateUsers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				VisitValidUserGroup visiting = new VisitValidUserGroup();
+				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
+				JFrame validUserGroup = new JFrame("User Validation");
+			    JList<String> valids = new JList<String>(visiting.totalInvalids());
+			    validUserGroup.setPreferredSize(new Dimension(300, 200));
+			    validUserGroup.getContentPane().setLayout(new GridLayout());
+			    validUserGroup.getContentPane().add(valids);
+			    validUserGroup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			    validUserGroup.pack();
+			    validUserGroup.setVisible(true);
+			}
+		});
+		
+		btnValidateUsers.setForeground(Color.BLACK);
+		btnValidateUsers.setContentAreaFilled(false);
+		btnValidateUsers.setBackground(new Color(200, 100, 200, 200));
+		btnValidateUsers.setBounds(271, 9, 251, 39);
+		frame.getContentPane().add(btnValidateUsers);
+		
+		JButton btnLastUpdated = new JButton("Last Updated User"){
+			@Override
+			protected void paintComponent(Graphics g) {
+				if (!isOpaque() && getBackground().getAlpha() < 255) {
+					g.setColor(getBackground());
+					g.fillRect(0, 0, getWidth(), getHeight());
+				}
+				super.paintComponent(g);
+			}
+		};
+		
+		btnLastUpdated.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				VisitLastUpdateUser visiting = new VisitLastUpdateUser();
+				((TwitterComponent) rootNode.getUserObject()).accept(visiting);
+				JOptionPane.showMessageDialog(null, "Last updated user: " + visiting.getID());
+			}
+		});
+		
+		btnLastUpdated.setForeground(Color.BLACK);
+		btnLastUpdated.setContentAreaFilled(false);
+		btnLastUpdated.setBackground(new Color(200, 100, 200, 200));
+		btnLastUpdated.setBounds(271, 90, 251, 39);
+		frame.getContentPane().add(btnLastUpdated);
+		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(AdminCP.class.getResource("/image/jibril3.jpg")));
 		label.setBounds(0, -31, 965, 632);
